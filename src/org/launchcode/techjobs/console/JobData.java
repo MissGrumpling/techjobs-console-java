@@ -7,9 +7,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -54,17 +52,36 @@ public class JobData {
         return allJobs;
     }
 
-    /**
+    /*/**
      * Returns results of search the jobs data by key/value, using
      * inclusion of the search term.
-     *
+     * <p>
      * For example, searching for employer "Enterprise" will include results
      * with "Enterprise Holdings, Inc".
      *
-     * @param column   Column that should be searched.
-     * @param value Value of teh field to search for
+     * @param column Column that should be searched.
+     * @param value  Value of teh field to search for
      * @return List of all jobs matching the criteria
      */
+
+    public static ArrayList<HashMap<String, String>> findByValue(String value) {
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> row : allJobs) {
+
+            for (String aValue : row.values()) {
+
+                if (aValue.toLowerCase().contains(value.toLowerCase())) {
+                    jobs.add(row);
+                    break;
+                }
+            }
+        }
+        return jobs;
+    }
+
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
 
         // load data, if not already loaded
@@ -76,7 +93,7 @@ public class JobData {
 
             String aValue = row.get(column);
 
-            if (aValue.contains(value)) {
+            if (aValue.toLowerCase().contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
@@ -84,10 +101,38 @@ public class JobData {
         return jobs;
     }
 
+   /* public static ArrayList<HashMap<String, String>> findByValue(String value) {
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> row : allJobs) {
+            //public <String, String > Set<String> getKeys(Map<String, String> map, String value){
+                Set<String> keys = new HashSet<>();
+                //String aColumn = row.get(value);
+                //for (var entry : row.entrySet()) {
+                for (Map.Entry<String, String> entry : row.entrySet()) {
+
+                    //String aEntry = row.get(entry);
+                    if (entry.getValue().equals(value)) {
+                        //if (row.containsValue(aEntry)) {
+                        //if(aEntry.contains(value)){
+                        //jobs.add(row);
+                        keys.add(entry.getKey());
+                    } row.put(keys);
+                }
+                //return keys;
+                //row.put(keys);
+                jobs.add(row);
+            }
+
+            //return jobs;
+        }*/
+
     /**
      * Read in data from a CSV file and store it in a list
      */
-    private static void loadData() {
+    public static void loadData() {
 
         // Only load data once
         if (isDataLoaded) {
@@ -126,3 +171,50 @@ public class JobData {
     }
 
 }
+    //}
+
+    //private static void loadData() {
+    //}
+
+    /*public static ArrayList<HashMap<String, String>> findByValue(String value) {
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> row : allJobs) {
+
+            HashMap<String, String> items = new HashMap<>();
+            var entrySet = items.values();
+            for (var entry : entrySet) {
+                String aValue = items.get(value);
+
+                if (!items.containsValue(aValue)) {
+                    items.put(aValue, items.get(aValue));
+                }
+            }
+
+            jobs.add(items);
+        }
+        return jobs;
+    }
+            //public <String, String > Set<String> getKeys(Map<String, String> map, String value){
+            //Set<String> keys = new HashSet<>();
+            //String aColumn = row.get(value);
+            //for (var entry : row.entrySet()) {
+            //for (Map.Entry<String, String> entry : row.entrySet()) {
+
+                //String aEntry = row.get(entry);
+                //if (entry.getValue().equals(value)) {
+                    //if (row.containsValue(aEntry)) {
+                    //if(aEntry.contains(value)){
+                    //jobs.add(row);
+                    //keys.add(entry.getKey());
+               // } row.put(keys);
+           // }
+            //return keys;
+            //row.put(keys);
+           // jobs.add(row);
+       // }
+
+       // return jobs;
+    //}*/
